@@ -25,6 +25,7 @@ const Home = () => {
   const [changeLocation, setChangeLocation] = useState("");
   const [changeCheckBox, setChangeCheckBox] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
+  const [jobListSearchLength, setJobListSearchLength] = useState(0);
 
   const fetchJobList = async () => {
     setLoading(true);
@@ -48,10 +49,15 @@ const Home = () => {
       changeJobDesc,
       changeLocation
     );
+    const arrNotEmpy = countNonEmpty(getJobsByParams);
+    setJobListSearchLength(arrNotEmpy);
     setIsSearch(true);
     setLoading(false);
     setJobList(getJobsByParams);
   };
+  function countNonEmpty(array) {
+    return array.filter(Boolean).length;
+  }
 
   return (
     <>
@@ -140,7 +146,7 @@ const Home = () => {
           >
             <Typography variant="h5" fontWeight="bold">
               {isSearch && jobList[0] !== null
-                ? `Showing ${jobList.length} jobs`
+                ? `Showing ${jobListSearchLength} jobs`
                 : "Job List"}
             </Typography>
             <hr />

@@ -11,45 +11,53 @@ const ListJob = ({ jobData }) => {
     <>
       {/* job title & location */}
       {jobData.length > 0 && jobData[0] !== null ? (
-        jobData.map((data) => (
-          <div key={data.id}>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Grid onClick={() => navigate(`/detail/${data.id}`)}>
-                <Typography color="primary" fontWeight="bold">
-                  {data.title ?? ""}
-                </Typography>
-              </Grid>
-              <Grid>
-                <Typography color="gray">{data.location ?? ""}</Typography>
-              </Grid>
-            </Grid>
-            {/* company , type job & times */}
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Grid>
-                <Typography color="gray">
-                  {data.company ?? ""} -{" "}
-                  <Typography variant="span" color="green" fontWeight="bold">
-                    {data.type ?? ""}
-                  </Typography>
-                </Typography>
-              </Grid>
-              <Grid>
-                <Typography color="gray">
-                  {moment(data.created_at).fromNow() ?? ""}
-                </Typography>
-              </Grid>
-            </Grid>
-            <hr />
+        jobData.map((data, index) => (
+          <div key={data !== null ? data.id ?? index : index}>
+            {data !== null ? (
+              <>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Grid onClick={() => navigate(`/detail/${data.id}`)}>
+                    <Typography color="primary" fontWeight="bold">
+                      {data.title ?? ""}
+                    </Typography>
+                  </Grid>
+                  <Grid>
+                    <Typography color="gray">{data.location ?? ""}</Typography>
+                  </Grid>
+                </Grid>
+                {/* company , type job & times */}
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Grid>
+                    <Typography color="gray">
+                      {data.company ?? ""} -{" "}
+                      <Typography
+                        variant="span"
+                        color="green"
+                        fontWeight="bold"
+                      >
+                        {data.type ?? ""}
+                      </Typography>
+                    </Typography>
+                  </Grid>
+                  <Grid>
+                    <Typography color="gray">
+                      {moment(data.created_at).fromNow() ?? ""}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <hr />
+              </>
+            ) : null}
           </div>
         ))
       ) : (
