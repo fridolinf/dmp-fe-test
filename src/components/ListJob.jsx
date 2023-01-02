@@ -1,9 +1,9 @@
 import { Card, Grid, Typography } from "@mui/material";
 import moment from "moment/moment";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router-dom";
-import { getJobList, pages } from "services/apiServices";
+import { getJobList } from "services/apiServices";
 import LoadingComponent from "./LoadingComponent";
 
 const ListJob = ({ jobData, isSearchJob }) => {

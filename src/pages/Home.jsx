@@ -1,7 +1,6 @@
 import { LocationOn, Work } from "@mui/icons-material";
 import {
   Button,
-  Card,
   Checkbox,
   FormControlLabel,
   Grid,
@@ -14,7 +13,7 @@ import HeaderComponent from "components/HeaderComponent";
 import ListJob from "components/ListJob";
 import LoadingComponent from "components/LoadingComponent";
 import { useEffect, useState } from "react";
-import { getJobList, getJobListByParams, pages } from "services/apiServices";
+import { getJobList, getJobListByParams } from "services/apiServices";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);

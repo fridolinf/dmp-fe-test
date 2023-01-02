@@ -8,20 +8,18 @@ import { getDetailJob } from "services/apiServices";
 
 const DetailJob = () => {
   const paramsUri = useParams();
-  const [loading, setLoading] = useState(false);
   const [detailJobData, setDetailJobData] = useState({});
   const navigate = useNavigate();
 
   const fetchDetailJob = async () => {
-    setLoading(true);
     const detailJob = await getDetailJob(paramsUri.id);
     console.log(detailJob, "detailjbo");
-    setLoading(false);
     setDetailJobData(detailJob);
   };
 
   useEffect(() => {
     fetchDetailJob();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
