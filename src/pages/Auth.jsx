@@ -1,121 +1,94 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
+import { Card, CardMedia } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useGoogleLogin } from "@react-oauth/google";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import FacebookLogin, {
+  FacebookLoginClient,
+} from "@greatsumini/react-facebook-login";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const theme = createTheme();
-
+const appId = process.env.REACT_APP_FB_ID;
 const Auth = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
+  const navigate = useNavigate();
+
+  const login = useGoogleLogin({
+    onSuccess: (tokenResponse) => tokenResponse && navigate("/home"),
+  });
+
+  useEffect(() => {
+    FacebookLoginClient.init({ appId, version: "v5.0" });
+  }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      textAlign="center"
+      style={{ minHeight: "100vh" }}
+    >
+      <Grid display="flex" justifyContent="space-around">
+        {/* Facebook */}
+        <FacebookLogin
+          appId="544895064344298"
+          onSuccess={(response) => {
+            navigate("/home");
           }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+          onFail={(error) => {
+            console.log("Login Failed!", error);
+          }}
+          onProfileSuccess={(response) => {
+            console.log("Get Profile Success!", response);
+          }}
+          render={({ onClick, logout }) => (
+            <Card
+              sx={{
+                width: "30%",
+                boxShadow: "1px 1px 10px 5px grey",
+                padding: 2.5,
+                cursor: "pointer",
+                "&:hover": { width: "32%" },
+              }}
+              onClick={onClick}
             >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
-    </ThemeProvider>
+              <CardMedia
+                sx={{ marginTop: 2, objectFit: "contain" }}
+                component="img"
+                height="194"
+                image="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Facebook_f_logo_%282019%29.svg/2048px-Facebook_f_logo_%282019%29.svg.png"
+                alt="facebook"
+              />
+              <Typography>LOGIN WITH FACEBOOK</Typography>
+            </Card>
+          )}
+        />
+
+        {/* Google */}
+        <Card
+          sx={{
+            width: "30%",
+            boxShadow: "1px 1px 10px 5px grey",
+            padding: 2.5,
+            cursor: "pointer",
+            "&:hover": { width: "32%" },
+          }}
+          onClick={() => login()}
+        >
+          <CardMedia
+            sx={{ marginTop: 2, objectFit: "contain" }}
+            component="img"
+            height="194"
+            image="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/768px-Google_%22G%22_Logo.svg.png"
+            alt="google"
+          />
+          <Typography>LOGIN WITH GOOGLE</Typography>
+        </Card>
+      </Grid>
+    </Grid>
   );
 };
 

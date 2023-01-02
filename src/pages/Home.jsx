@@ -16,11 +16,15 @@ import HeaderComponent from "components/HeaderComponent";
 import ListJob from "components/ListJob";
 import LoadingComponent from "components/LoadingComponent";
 import React, { useEffect, useState } from "react";
-import { getJobList } from "services/apiServices";
+import { getJobList, getJobListByParams } from "services/apiServices";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const [jobList, setJobList] = useState([]);
+  const [changeJobDesc, setChangeJobDesc] = useState("");
+  const [changeLocation, setChangeLocation] = useState("");
+  const [changeCheckBox, setChangeCheckBox] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
 
   const fetchJobList = async () => {
     setLoading(true);
@@ -29,11 +33,25 @@ const Home = () => {
     setJobList(job);
   };
 
-  console.log(jobList, "jbos");
-
   useEffect(() => {
+    setIsSearch(false);
     fetchJobList();
   }, []);
+
+  const searchJobs = async () => {
+    setLoading(true);
+    setChangeCheckBox(false);
+    setChangeLocation("");
+    setChangeJobDesc("");
+    const getJobsByParams = await getJobListByParams(
+      changeCheckBox,
+      changeJobDesc,
+      changeLocation
+    );
+    setIsSearch(true);
+    setLoading(false);
+    setJobList(getJobsByParams);
+  };
 
   return (
     <>
@@ -58,6 +76,7 @@ const Home = () => {
               sx={{ height: "100px" }}
               fullWidth
               placeholder="Filter by title, benefits, companies, expertise"
+              onChange={(e) => setChangeJobDesc(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -72,6 +91,7 @@ const Home = () => {
               sx={{ height: "100px" }}
               fullWidth
               placeholder="Filter by city, state, zip code or country"
+              onChange={(e) => setChangeLocation(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -81,14 +101,23 @@ const Home = () => {
               }}
             />
           </Grid>
-          <Grid item xs={2} marginTop={0.5}>
+          <Grid item xs={2} marginTop={1}>
             <FormControlLabel
-              control={<Checkbox defaultChecked />}
+              control={
+                <Checkbox
+                  checked={changeCheckBox}
+                  onChange={(e) => setChangeCheckBox(e.target.checked)}
+                />
+              }
               label="Full Time Only"
             />
           </Grid>
-          <Grid item xs={2}>
-            <Button variant="contained" sx={{ backgroundColor: "grey" }}>
+          <Grid item xs={2} marginTop={1}>
+            <Button
+              onClick={searchJobs}
+              variant="contained"
+              sx={{ backgroundColor: "grey" }}
+            >
               <Typography
                 variant="p"
                 fontWeight="bold"
@@ -103,7 +132,6 @@ const Home = () => {
         {loading ? (
           <LoadingComponent />
         ) : (
-          // <div>
           <Box
             sx={{
               boxShadow: "1px 1px 10px 5px grey",
@@ -111,23 +139,27 @@ const Home = () => {
             }}
           >
             <Typography variant="h5" fontWeight="bold">
-              Job List
+              {isSearch && jobList[0] !== null
+                ? `Showing ${jobList.length} jobs`
+                : "Job List"}
             </Typography>
             <hr />
             <ListJob jobData={jobList} />
-            <Card
-              sx={{
-                margin: "5px 0",
-                backgroundColor: "#1976d2",
-                width: "100%",
-                textAlign: "center",
-                color: "white",
-              }}
-            >
-              <Typography padding={1} fontWeight="bold">
-                More Jobs
-              </Typography>
-            </Card>
+            {isSearch ? null : (
+              <Card
+                sx={{
+                  margin: "5px 0",
+                  backgroundColor: "#1976d2",
+                  width: "100%",
+                  textAlign: "center",
+                  color: "white",
+                }}
+              >
+                <Typography padding={1} fontWeight="bold">
+                  More Jobs
+                </Typography>
+              </Card>
+            )}
           </Box>
         )}
       </Box>

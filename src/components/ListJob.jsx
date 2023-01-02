@@ -10,7 +10,7 @@ const ListJob = ({ jobData }) => {
   return (
     <>
       {/* job title & location */}
-      {jobData.length > 0 &&
+      {jobData.length > 0 && jobData[0] !== null ? (
         jobData.map((data) => (
           <div key={data.id}>
             <Grid
@@ -51,7 +51,10 @@ const ListJob = ({ jobData }) => {
             </Grid>
             <hr />
           </div>
-        ))}
+        ))
+      ) : (
+        <div>NO DATA</div>
+      )}
     </>
   );
 };
