@@ -3,10 +3,10 @@ import ENDPOINT from "api/endpoints/job";
 import { Header } from "helpers/headerHelper";
 import * as services from "helpers/axiosHelper";
 
-export const getJobList = async () => {
+export const getJobList = async (page) => {
   try {
     const request = await services.GET(
-      `${API_BASE_URL}${ENDPOINT.getJobList}?page=1`,
+      `${API_BASE_URL}${ENDPOINT.getJobList}?page=${page}`,
       Header()
     );
     if (request.status === 200) {
@@ -14,7 +14,21 @@ export const getJobList = async () => {
       return data;
     }
   } catch (error) {
-    // setLoading(false);
+    console.log(error, "err");
+  }
+};
+
+export const getAllJobList = async () => {
+  try {
+    const request = await services.GET(
+      `${API_BASE_URL}${ENDPOINT.getJobList}`,
+      Header()
+    );
+    if (request.status === 200) {
+      const { data } = request;
+      return data;
+    }
+  } catch (error) {
     console.log(error, "err");
   }
 };
@@ -30,7 +44,6 @@ export const getJobListByParams = async (isFullTime, desc, loct) => {
       return data;
     }
   } catch (error) {
-    // setLoading(false);
     console.log(error, "err");
   }
 };
@@ -46,7 +59,6 @@ export const getDetailJob = async (id) => {
       return data;
     }
   } catch (error) {
-    // setLoading(false);
     console.log(error, "err");
   }
 };

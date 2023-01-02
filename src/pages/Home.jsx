@@ -1,10 +1,8 @@
 import { LocationOn, Work } from "@mui/icons-material";
 import {
-  AppBar,
   Button,
   Card,
   Checkbox,
-  Container,
   FormControlLabel,
   Grid,
   InputAdornment,
@@ -15,8 +13,8 @@ import { Box } from "@mui/system";
 import HeaderComponent from "components/HeaderComponent";
 import ListJob from "components/ListJob";
 import LoadingComponent from "components/LoadingComponent";
-import React, { useEffect, useState } from "react";
-import { getJobList, getJobListByParams } from "services/apiServices";
+import { useEffect, useState } from "react";
+import { getJobList, getJobListByParams, pages } from "services/apiServices";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
@@ -29,7 +27,7 @@ const Home = () => {
 
   const fetchJobList = async () => {
     setLoading(true);
-    const job = await getJobList();
+    const job = await getJobList(1);
     setLoading(false);
     setJobList(job);
   };
@@ -49,12 +47,13 @@ const Home = () => {
       changeJobDesc,
       changeLocation
     );
-    const arrNotEmpy = countNonEmpty(getJobsByParams);
-    setJobListSearchLength(arrNotEmpy);
+    const arrNotNull = countNonEmpty(getJobsByParams);
+    setJobListSearchLength(arrNotNull);
     setIsSearch(true);
     setLoading(false);
     setJobList(getJobsByParams);
   };
+
   function countNonEmpty(array) {
     return array.filter(Boolean).length;
   }
@@ -63,9 +62,7 @@ const Home = () => {
     <>
       {/* AppBar */}
       <HeaderComponent />
-
       {/* Body */}
-
       <Box component="main" sx={{ p: 3 }}>
         {/* Search Content */}
         <Grid container spacing={2} sx={{ color: "black" }}>
@@ -150,8 +147,8 @@ const Home = () => {
                 : "Job List"}
             </Typography>
             <hr />
-            <ListJob jobData={jobList} />
-            {isSearch ? null : (
+            <ListJob isSearchJob={isSearch} jobData={jobList} />
+            {/* {isSearch ? null : (
               <Card
                 sx={{
                   margin: "5px 0",
@@ -165,7 +162,7 @@ const Home = () => {
                   More Jobs
                 </Typography>
               </Card>
-            )}
+            )} */}
           </Box>
         )}
       </Box>

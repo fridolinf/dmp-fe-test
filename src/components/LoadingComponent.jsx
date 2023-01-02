@@ -10,7 +10,7 @@ const LoadingComponent = () => {
       textAlign="center"
       justifyContent="center"
     >
-      <MoreHoriz />
+      <MoreHoriz fontSize="36px" />
     </Grid>
   );
 };
