@@ -66,7 +66,6 @@ const Auth = () => {
             </Card>
           )}
         />
-
         {/* Google */}
         <Card
           sx={{
